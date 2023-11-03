@@ -3,19 +3,30 @@ orbs:
   python: circleci/python@2.1.1
 
 jobs:
-  build_and_test:
+  lint-ant-test:
     executor: python/default
     steps:
       - checkout
       - python/install-packages:
           pkg-manager: pip
       - run:
+          name: Install dependencies
+          command: |
+            python -m pip install -r requirements.txt
+      - run:
+          name: Lint with flake8
+          command: |
+            flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+            flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+      - run:
           name: Run tests
-          command: python -m pytest
+          command: |
+            mkdir test-results
+            python -m pytest --junitxml=test-results/junit.xml
       - store_test_results:
           path: test-results
 
 workflows:
-  test_my_app:
+  build_and_test:
     jobs:
-      - build_and_test
+      - lint-ant-test
