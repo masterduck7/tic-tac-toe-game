@@ -47,3 +47,6 @@ class Game(models.Model):
         on_delete=models.SET_NULL,
         related_name="winner",
     )
+
+    def __str__(self):
+        return self.name
