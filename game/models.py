@@ -58,11 +58,18 @@ class Game(models.Model):
         if self.status != GameConstants.STATUS_IN_GAME:
             raise Exception
 
+    def check_actual_player(self, username: str) -> Optional[bool]:
+        if self.actual_player.username != username:
+            raise Exception
+
     def check_movement(self, movement_x: int, movement_y: int) -> Optional[bool]:
         decoded_board = json.loads(self.board)
         if decoded_board[movement_x][movement_y] == 0:
             decoded_board[movement_x][movement_y] = self.actual_player.username
             self.board = json.dumps(decoded_board)
+            self.actual_player = self.users.exclude(
+                username=self.actual_player.username
+            ).first()
             self.save()
         else:
             raise Exception

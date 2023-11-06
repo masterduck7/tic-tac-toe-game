@@ -90,6 +90,7 @@ class PlayGameDetail(APIView):
         if serializer.is_valid():
             game = self.get_object(name)
             game.check_status
+            game.check_actual_player(name)
             game.check_movement(
                 movement_x=serializer.data["movement_x"],
                 movement_y=serializer.data["movement_y"],
