@@ -4,7 +4,7 @@ from game.serializers.user import UserInputSerializer
 
 
 class GameInputSerializer(serializers.Serializer):
-    name = serializers.CharField(max_length=100, read_only=True)
+    name = serializers.CharField(max_length=100)
     username = serializers.CharField(max_length=100)
 
 
@@ -20,6 +20,12 @@ class GameSerializer(serializers.Serializer):
     users = UserInputSerializer(many=True, read_only=True)
     actual_player = UserInputSerializer(read_only=True)
     winner = UserInputSerializer(read_only=True)
+
+
+class GameCreatedSerializer(serializers.Serializer):
+    name = serializers.CharField(max_length=100)
+    status = serializers.CharField(max_length=100, read_only=True)
+    users = UserInputSerializer(many=True, read_only=True)
 
 
 class InitGameSerializer(serializers.Serializer):

@@ -9,12 +9,14 @@ from game.lib.constants import GameConstants
 from game.models import Game, User
 from game.serializers.game import (
     AvailableGameSerializer,
+    GameCreatedSerializer,
     GameFinishedSerializer,
     GameInputSerializer,
     GameSerializer,
     InitGameSerializer,
     PlayGameInputSerializer,
 )
+from game.serializers.user import UserSerializer
 
 
 class GamesList(APIView):
@@ -30,6 +32,21 @@ class GamesList(APIView):
             games = Game.objects.all()
             serializer = GameSerializer(games, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request, format=None):
+        serializer = GameInputSerializer(data=request.data)
+        if serializer.is_valid():
+            game = Game.objects.create(
+                name=serializer.data["name"],
+            )
+            user, _ = User.objects.get_or_create(
+                username=serializer.data["username"],
+            )
+            game.users.add(user)
+            game.save()
+
+            serializer = GameCreatedSerializer(game)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class GameDetail(APIView):
