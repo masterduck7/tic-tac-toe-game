@@ -67,12 +67,16 @@ class Game(models.Model):
         if decoded_board[movement_x][movement_y] == 0:
             decoded_board[movement_x][movement_y] = self.actual_player.username
             self.board = json.dumps(decoded_board)
-            self.actual_player = self.users.exclude(
-                username=self.actual_player.username
-            ).first()
             self.save()
         else:
             raise Exception
+
+    @property
+    def change_player(self):
+        self.actual_player = self.users.exclude(
+            username=self.actual_player.username
+        ).first()
+        self.save()
 
     @property
     def check_winner(self) -> Optional[bool]:
@@ -127,5 +131,12 @@ class Game(models.Model):
         if winner:
             self.status = GameConstants.STATUS_FINISHED
             self.winner = self.actual_player
+            self.winner.points += 1
+            self.actual_player = None
             self.save()
+            for user in self.users.all():
+                user.number_of_games += 1
+                user.save()
             return True
+        else:
+            self.change_player
