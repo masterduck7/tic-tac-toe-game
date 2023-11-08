@@ -3,6 +3,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from game.lib.exceptions import UserNotFoundException
 from game.models import Game, User
 from game.serializers.game import GameSerializer
 from game.serializers.user import UserInputSerializer, UserSerializer
@@ -17,7 +18,7 @@ class UserDetail(APIView):
         try:
             return User.objects.get(username=username)
         except User.DoesNotExist:
-            raise Http404
+            raise UserNotFoundException
 
     def get(self, request, username, format=None):
         user = self.get_object(username)

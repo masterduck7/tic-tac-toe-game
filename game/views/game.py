@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from game.lib.constants import GameConstants
+from game.lib.exceptions import GameNotFoundException
 from game.models import Game, User
 from game.serializers.game import (
     AvailableGameSerializer,
@@ -57,7 +58,7 @@ class GameDetail(APIView):
         try:
             return Game.objects.get(name=name)
         except Game.DoesNotExist:
-            raise Http404
+            raise GameNotFoundException
 
     def get(self, request, name, format=None):
         game = self.get_object(name)
@@ -94,7 +95,7 @@ class PlayGameDetail(APIView):
         try:
             return Game.objects.get(name=name)
         except Game.DoesNotExist:
-            raise Http404
+            raise GameNotFoundException
 
     def get(self, request, name, format=None):
         game = self.get_object(name)
