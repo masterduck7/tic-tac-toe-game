@@ -1,3 +1,5 @@
+import json
+from typing import Optional
 from django.db import models
 
 from game.lib.constants import GameConstants
@@ -50,3 +52,91 @@ class Game(models.Model):
 
     def __str__(self):
         return self.name
+
+    @property
+    def check_status(self) -> Optional[bool]:
+        if self.status != GameConstants.STATUS_IN_GAME:
+            raise Exception
+
+    def check_actual_player(self, username: str) -> Optional[bool]:
+        if self.actual_player.username != username:
+            raise Exception
+
+    def check_movement(self, movement_x: int, movement_y: int) -> Optional[bool]:
+        decoded_board = json.loads(self.board)
+        if decoded_board[movement_x][movement_y] == 0:
+            decoded_board[movement_x][movement_y] = self.actual_player.username
+            self.board = json.dumps(decoded_board)
+            self.save()
+        else:
+            raise Exception
+
+    @property
+    def change_player(self):
+        self.actual_player = self.users.exclude(
+            username=self.actual_player.username
+        ).first()
+        self.save()
+
+    @property
+    def check_winner(self) -> Optional[bool]:
+        decoded_board = json.loads(self.board)
+
+        # Check horizontal
+        for row in range(len(decoded_board)):
+            winner = True
+            for col in range(len(decoded_board)):
+                if decoded_board[row][col] != self.actual_player.username:
+                    winner = False
+                    break
+            if winner:
+                self.status = GameConstants.STATUS_FINISHED
+                self.winner = self.actual_player
+                self.save()
+                return True
+
+        # Check vertical
+        for row in range(len(decoded_board)):
+            winner = True
+            for col in range(len(decoded_board)):
+                if decoded_board[col][row] != self.actual_player.username:
+                    winner = False
+                    break
+            if winner:
+                self.status = GameConstants.STATUS_FINISHED
+                self.winner = self.actual_player
+                self.save()
+                return True
+
+        # Check diagonals
+        winner = True
+        for row in range(len(decoded_board)):
+            if decoded_board[row][row] != self.actual_player.username:
+                winner = False
+                break
+        if winner:
+            self.status = GameConstants.STATUS_FINISHED
+            self.winner = self.actual_player
+            self.save()
+            return True
+
+        winner = True
+        for row in range(len(decoded_board)):
+            if (
+                decoded_board[row][len(decoded_board) - 1 - row]
+                != self.actual_player.username
+            ):
+                winner = False
+                break
+        if winner:
+            self.status = GameConstants.STATUS_FINISHED
+            self.winner = self.actual_player
+            self.winner.points += 1
+            self.actual_player = None
+            self.save()
+            for user in self.users.all():
+                user.number_of_games += 1
+                user.save()
+            return True
+        else:
+            self.change_player
