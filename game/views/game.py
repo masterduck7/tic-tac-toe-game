@@ -65,10 +65,8 @@ class GameDetail(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, name, format=None):
-        print(request.data)
         serializer = GameInputSerializer(data=request.data)
         if serializer.is_valid():
-            print(serializer.data)
             game = self.get_object(name)
             user = User.objects.get(username=serializer.data["username"])
             game.users.add(user)
