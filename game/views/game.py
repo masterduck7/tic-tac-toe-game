@@ -14,9 +14,8 @@ from game.serializers.game import (
     GameInputSerializer,
     GameSerializer,
     InitGameSerializer,
-    PlayGameInputSerializer,
+    UserPlayGameInputSerializer,
 )
-from game.serializers.user import UserSerializer
 
 
 class GamesList(APIView):
@@ -66,8 +65,10 @@ class GameDetail(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, name, format=None):
+        print(request.data)
         serializer = GameInputSerializer(data=request.data)
         if serializer.is_valid():
+            print(serializer.data)
             game = self.get_object(name)
             user = User.objects.get(username=serializer.data["username"])
             game.users.add(user)
@@ -103,11 +104,11 @@ class PlayGameDetail(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, name, format=None):
-        serializer = PlayGameInputSerializer(data=request.data)
+        serializer = UserPlayGameInputSerializer(data=request.data)
         if serializer.is_valid():
             game = self.get_object(name)
             game.check_status
-            game.check_actual_player(name)
+            game.check_actual_player(serializer.data["username"])
             game.check_movement(
                 movement_x=serializer.data["movement_x"],
                 movement_y=serializer.data["movement_y"],
