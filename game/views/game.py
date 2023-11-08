@@ -1,6 +1,3 @@
-import json
-
-from django.http import Http404
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -8,15 +5,7 @@ from rest_framework.views import APIView
 from game.lib.constants import GameConstants
 from game.lib.exceptions import GameNotFoundException
 from game.models import Game, User
-from game.serializers.game import (
-    AvailableGameSerializer,
-    GameCreatedSerializer,
-    GameFinishedSerializer,
-    GameInputSerializer,
-    GameSerializer,
-    InitGameSerializer,
-    UserPlayGameInputSerializer,
-)
+from game.serializers import game as game_serializers
 
 
 class GamesList(APIView):
@@ -27,14 +16,14 @@ class GamesList(APIView):
     def get(self, request, format=None):
         if request.GET.get("status") == "waiting":
             games = Game.objects.filter(status=GameConstants.STATUS_WAITING)
-            serializer = AvailableGameSerializer(games, many=True)
+            serializer = game_serializers.AvailableGameSerializer(games, many=True)
         else:
             games = Game.objects.all()
-            serializer = GameSerializer(games, many=True)
+            serializer = game_serializers.GameSerializer(games, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, format=None):
-        serializer = GameInputSerializer(data=request.data)
+        serializer = game_serializers.GameInputSerializer(data=request.data)
         if serializer.is_valid():
             game = Game.objects.create(
                 name=serializer.data["name"],
@@ -45,7 +34,7 @@ class GamesList(APIView):
             game.users.add(user)
             game.save()
 
-            serializer = GameCreatedSerializer(game)
+            serializer = game_serializers.GameCreatedSerializer(game)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
@@ -62,11 +51,11 @@ class GameDetail(APIView):
 
     def get(self, request, name, format=None):
         game = self.get_object(name)
-        serializer = GameSerializer(game)
+        serializer = game_serializers.GameSerializer(game)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, name, format=None):
-        serializer = GameInputSerializer(data=request.data)
+        serializer = game_serializers.GameInputSerializer(data=request.data)
         if serializer.is_valid():
             game = self.get_object(name)
             user = User.objects.get(username=serializer.data["username"])
@@ -77,10 +66,10 @@ class GameDetail(APIView):
                 game.actual_player = game.users.all().first()
                 game.save()
 
-                serializer = InitGameSerializer(game)
+                serializer = game_serializers.InitGameSerializer(game)
                 return Response(serializer.data, status=status.HTTP_200_OK)
 
-            serializer = GameSerializer(game)
+            serializer = game_serializers.GameSerializer(game)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -99,11 +88,11 @@ class PlayGameDetail(APIView):
 
     def get(self, request, name, format=None):
         game = self.get_object(name)
-        serializer = GameSerializer(game)
+        serializer = game_serializers.GameSerializer(game)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, name, format=None):
-        serializer = UserPlayGameInputSerializer(data=request.data)
+        serializer = game_serializers.UserPlayGameInputSerializer(data=request.data)
         if serializer.is_valid():
             game = self.get_object(name)
             game.check_status
@@ -114,8 +103,8 @@ class PlayGameDetail(APIView):
             )
             winner = game.check_winner
             if winner:
-                serializer = GameFinishedSerializer(game)
+                serializer = game_serializers.GameFinishedSerializer(game)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             else:
-                serializer = GameSerializer(game)
+                serializer = game_serializers.GameSerializer(game)
                 return Response(serializer.data, status=status.HTTP_200_OK)
