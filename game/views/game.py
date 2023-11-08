@@ -115,6 +115,8 @@ class PlayGameDetail(APIView):
             )
             winner = game.check_winner
             if winner:
+                game.winner.points += 1
+                game.save()
                 serializer = GameFinishedSerializer(game)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             else:
