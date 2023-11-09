@@ -37,8 +37,8 @@ class TestGameList:
 
         assert response.status_code == 201
         assert response.data["name"] == data["name"]
-        assert len(response.data["users"]) == 1
-        assert response.data["users"][0]["username"] == data["username"]
+        assert len(response.data["players"]) == 1
+        assert response.data["players"][0]["username"] == data["username"]
 
     def test_create_game_with_new_user(self, client):
         data = {
@@ -49,8 +49,8 @@ class TestGameList:
 
         assert response.status_code == 201
         assert response.data["name"] == data["name"]
-        assert len(response.data["users"]) == 1
-        assert response.data["users"][0]["username"] == data["username"]
+        assert len(response.data["players"]) == 1
+        assert response.data["players"][0]["username"] == data["username"]
 
     def test_create_game_raise_serializer_exception(self, client):
         data = {"name": "Test a new game again"}
@@ -71,10 +71,10 @@ class TestGameDetail:
 
         assert response.status_code == 200
         assert response.data["name"] == game_with_one_player.name
-        assert len(response.data["users"]) == game_with_one_player.users.count()
+        assert len(response.data["players"]) == game_with_one_player.players.count()
         assert (
-            response.data["users"][0]["username"]
-            == game_with_one_player.users.first().username
+            response.data["players"][0]["username"]
+            == game_with_one_player.players.first().username
         )
 
     def test_get_game_details_raise_game_not_found(self, client):
@@ -97,7 +97,7 @@ class TestGameDetail:
 
         assert response.status_code == 200
         assert response.data["name"] == game_with_one_player.name
-        assert len(response.data["users"]) == 2
+        assert len(response.data["players"]) == 2
         assert response.data["status"] == GameConstants.STATUS_IN_GAME
 
     def test_update_game_raise_full_game_exception(self, client, game_with_two_players):
@@ -134,7 +134,7 @@ class TestPlayGame:
 
         assert response.status_code == 200
         assert response.data["name"] == game_with_two_players.name
-        assert len(response.data["users"]) == game_with_two_players.users.count()
+        assert len(response.data["players"]) == game_with_two_players.players.count()
 
     def test_get_game_details_raise_game_not_found(self, client):
         url = reverse("game:play-game", kwargs={"name": "false game"})
@@ -163,7 +163,7 @@ class TestPlayGame:
         url = reverse("game:play-game", kwargs={"name": game_with_one_player.name})
         data = {
             "name": game_with_one_player.name,
-            "username": game_with_one_player.users.first().username,
+            "username": game_with_one_player.players.first().username,
             "movement_x": 0,
             "movement_y": 0,
         }
@@ -181,7 +181,7 @@ class TestPlayGame:
         url = reverse("game:play-game", kwargs={"name": game_with_two_players.name})
         data = {
             "name": game_with_two_players.name,
-            "username": game_with_two_players.users.last().username,
+            "username": game_with_two_players.players.last().username,
             "movement_x": 0,
             "movement_y": 0,
         }
@@ -199,7 +199,7 @@ class TestPlayGame:
         url = reverse("game:play-game", kwargs={"name": game_with_two_players.name})
         data = {
             "name": game_with_two_players.name,
-            "username": game_with_two_players.users.first().username,
+            "username": game_with_two_players.players.first().username,
             "movement_x": 10,
             "movement_y": 10,
         }

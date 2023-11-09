@@ -31,7 +31,7 @@ class GamesList(APIView):
             user, _ = User.objects.get_or_create(
                 username=serializer.data["username"],
             )
-            game.users.add(user)
+            game.players.add(user)
             game.save()
 
             serializer = game_serializers.GameCreatedSerializer(game)
@@ -60,15 +60,15 @@ class GameDetail(APIView):
         serializer = game_serializers.GameInputSerializer(data=request.data)
         if serializer.is_valid():
             game = self.get_object(name)
-            if game.users.count() >= 2:
+            if game.players.count() >= 2:
                 raise game_exceptions.FullGameStatusException
 
             user = User.objects.get(username=serializer.data["username"])
-            game.users.add(user)
+            game.players.add(user)
 
-            if game.users.all().count() == 2:
+            if game.players.all().count() == 2:
                 game.status = GameConstants.STATUS_IN_GAME
-                game.actual_player = game.users.all().first()
+                game.actual_player = game.players.all().first()
                 game.save()
 
                 serializer = game_serializers.InitGameSerializer(game)
