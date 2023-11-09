@@ -73,9 +73,6 @@ class GameDetail(APIView):
 
                 serializer = game_serializers.InitGameSerializer(game)
                 return Response(serializer.data, status=status.HTTP_200_OK)
-
-            serializer = game_serializers.GameSerializer(game)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             raise game_exceptions.SerializerException
 

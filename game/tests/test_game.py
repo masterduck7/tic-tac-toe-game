@@ -18,12 +18,15 @@ class TestGameList:
         assert len(response.data) == 1
         assert response.data[0]["name"] == new_game.name
 
-    def test_get_available_games_list(self, client, new_game, game_with_one_player):
-        response = client.get(self.games_list_url, kwargs={"status": "waiting"})
+    def test_get_available_games_list(
+        self, client, new_game, game_with_one_player, game_with_two_players
+    ):
+        response = client.get(self.games_list_url, **{"QUERY_STRING": "status=waiting"})
 
         assert response.status_code == 200
         assert len(response.data) == 2
-        assert response.data[0]["name"] == new_game.name
+        for game in response.data:
+            assert game["name"] in [game_with_one_player.name, new_game.name]
 
     def test_create_game(self, client, user):
         data = {
