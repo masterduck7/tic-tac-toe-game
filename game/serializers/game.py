@@ -3,13 +3,15 @@ from rest_framework import serializers
 from game.serializers.user import UserInputSerializer
 
 
-class GameInputSerializer(serializers.Serializer):
-    name = serializers.CharField(max_length=100)
+class GameUpdateInputSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=100)
 
 
+class GameInputSerializer(GameUpdateInputSerializer):
+    name = serializers.CharField(max_length=100)
+
+
 class UserPlayGameInputSerializer(serializers.Serializer):
-    name = serializers.CharField(max_length=100, read_only=True)
     username = serializers.CharField(max_length=100)
     movement_x = serializers.IntegerField()
     movement_y = serializers.IntegerField()

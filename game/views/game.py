@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from game.lib.constants import GameConstants
 from game.lib import exceptions as game_exceptions
 from game.lib import swagger as game_swagger
-from game.models import Game, User
+from game.models import Game, User, UserGame
 from game.serializers import game as game_serializers
 
 
@@ -46,6 +46,10 @@ class GamesList(APIView):
             game.players.add(user)
             game.save()
 
+            user_game = UserGame.objects.get(user=user, game=game)
+            user_game.character = GameConstants.CHARACTERS_X
+            user_game.save()
+
             serializer = game_serializers.GameCreatedSerializer(game)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
@@ -71,14 +75,14 @@ class GameDetail(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
-        responses=game_swagger.GameDetail.post_response_schemas,
-        request_body=game_swagger.GameDetail.post_request_schemas,
+        responses=game_swagger.GameDetail.put_response_schemas,
+        request_body=game_swagger.GameDetail.put_request_schemas,
     )
     def put(self, request, name, format=None):
         """
         Add a new user to the game. If the game is filled it starts.
         """
-        serializer = game_serializers.GameInputSerializer(data=request.data)
+        serializer = game_serializers.GameUpdateInputSerializer(data=request.data)
         if serializer.is_valid():
             game = self.get_object(name)
             if game.players.count() >= 2:
@@ -88,6 +92,10 @@ class GameDetail(APIView):
             game.players.add(user)
 
             if game.players.all().count() == 2:
+                user_game = UserGame.objects.get(user=user, game=game)
+                user_game.character = GameConstants.CHARACTERS_O
+                user_game.save()
+
                 game.status = GameConstants.STATUS_IN_GAME
                 game.actual_player = game.players.all().first()
                 game.save()

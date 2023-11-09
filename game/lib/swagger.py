@@ -54,7 +54,7 @@ class UserDetail:
                                 {"username": "Jerry"},
                             ],
                             "actual_player": None,
-                            "board": "[[Tom,Tom,Tom],[Jerry,Jerry,0],[0,0,0]]",
+                            "board": f"[[{GameConstants.CHARACTERS_X},{GameConstants.CHARACTERS_X},{GameConstants.CHARACTERS_X}],[Y,Y,''],['','','']]",
                             "winner": {
                                 "username": "Tom",
                             },
@@ -86,7 +86,7 @@ class GameList:
                         "actual_player": {
                             "username": "Tom",
                         },
-                        "board": "[[Tom,Tom,0],[Jerry,Jerry,0],[0,0,0]]",
+                        "board": f"[[{GameConstants.CHARACTERS_X},{GameConstants.CHARACTERS_X},''],[Y,Y,''],['','','']]",
                         "winner": {
                             "username": "Tom",
                         },
@@ -168,7 +168,7 @@ class GameDetail:
                         "actual_player": {
                             "username": "Tom",
                         },
-                        "board": "[[Tom,Tom,0],[Jerry,Jerry,0],[0,0,0]]",
+                        "board": f"[[{GameConstants.CHARACTERS_X},{GameConstants.CHARACTERS_X},''],[Y,Y,''],['','','']]",
                         "winner": {
                             "username": "Tom",
                         },
@@ -182,15 +182,14 @@ class GameDetail:
         ),
     }
 
-    post_request_schemas = openapi.Schema(
+    put_request_schemas = openapi.Schema(
         type=openapi.TYPE_OBJECT,
         properties={
-            "name": openapi.Schema(type=openapi.TYPE_STRING, description="string"),
             "username": openapi.Schema(type=openapi.TYPE_STRING, description="string"),
         },
     )
 
-    post_response_schemas = {
+    put_response_schemas = {
         "200": openapi.Response(
             description="Game updated",
             examples={
@@ -244,7 +243,7 @@ class PlayGameDetail:
                         "actual_player": {
                             "username": "Tom",
                         },
-                        "board": "[[Tom,Tom,0],[Jerry,Jerry,0],[0,0,0]]",
+                        "board": f"[[{GameConstants.CHARACTERS_X},{GameConstants.CHARACTERS_X},''],[Y,Y,''],['','','']]",
                         "winner": {
                             "username": "Tom",
                         },
@@ -261,13 +260,12 @@ class PlayGameDetail:
     post_request_schemas = openapi.Schema(
         type=openapi.TYPE_OBJECT,
         properties={
-            "name": openapi.Schema(type=openapi.TYPE_STRING, description="string"),
             "username": openapi.Schema(type=openapi.TYPE_STRING, description="string"),
             "movement_x": openapi.Schema(
-                type=openapi.TYPE_STRING, description="string"
+                type=openapi.TYPE_INTEGER, description="integer"
             ),
             "movement_y": openapi.Schema(
-                type=openapi.TYPE_STRING, description="string"
+                type=openapi.TYPE_INTEGER, description="integer"
             ),
         },
     )
@@ -287,7 +285,7 @@ class PlayGameDetail:
                         "actual_player": {
                             "username": "Tom",
                         },
-                        "board": "[[Tom,Tom,0],[Jerry,Jerry,0],[0,0,0]]",
+                        "board": f"[[{GameConstants.CHARACTERS_X},{GameConstants.CHARACTERS_X},''],[Y,Y,''],['','','']]",
                         "winner": {
                             "username": "Tom",
                         },

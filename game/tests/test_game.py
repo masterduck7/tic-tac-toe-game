@@ -11,22 +11,22 @@ class TestGameList:
     def setup_method(self):
         self.games_list_url = reverse("game:games-list")
 
-    def test_get_games_list(self, client, new_game):
+    def test_get_games_list(self, client, game_with_one_player):
         response = client.get(self.games_list_url)
 
         assert response.status_code == 200
         assert len(response.data) == 1
-        assert response.data[0]["name"] == new_game.name
+        assert response.data[0]["name"] == game_with_one_player.name
 
     def test_get_available_games_list(
-        self, client, new_game, game_with_one_player, game_with_two_players
+        self, client, game_with_one_player, game_with_two_players
     ):
         response = client.get(self.games_list_url, **{"QUERY_STRING": "status=waiting"})
 
         assert response.status_code == 200
-        assert len(response.data) == 2
+        assert len(response.data) == 1
         for game in response.data:
-            assert game["name"] in [game_with_one_player.name, new_game.name]
+            assert game["name"] == game_with_one_player.name
 
     def test_create_game(self, client, user):
         data = {
@@ -224,10 +224,7 @@ class TestPlayGame:
         assert response.status_code == 200
         assert response.data["name"] == game_with_two_players.name
         assert response.data["status"] == GameConstants.STATUS_IN_GAME
-        assert (
-            json.loads(response.data["board"])[0][0]
-            == game_with_two_players.actual_player.username
-        )
+        assert json.loads(response.data["board"])[0][0] == GameConstants.CHARACTERS_X
 
     def test_play_game_and_wins_horizontal(
         self, client, game_with_two_players_and_last_turn_to_win_horizontal
