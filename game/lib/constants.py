@@ -11,9 +11,9 @@ class GameConstants:
 
     VALID_POSITIONS = [0, 1, 2]
 
-    CHARACTERS_X = "X"
-    CHARACTERS_O = "O"
-    CHARACTERS_CHOICES = (
-        (CHARACTERS_X, "X"),
-        (CHARACTERS_O, "O"),
+    MARK_X = "X"
+    MARK_O = "O"
+    MARK_CHOICES = (
+        (MARK_X, "X"),
+        (MARK_O, "O"),
     )

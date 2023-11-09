@@ -99,6 +99,8 @@ class TestGameDetail:
         assert response.data["name"] == game_with_one_player.name
         assert len(response.data["players"]) == 2
         assert response.data["status"] == GameConstants.STATUS_IN_GAME
+        assert "actual_mark" in response.data
+        assert response.data["actual_mark"] == GameConstants.MARK_X
 
     def test_update_game_raise_full_game_exception(self, client, game_with_two_players):
         url = reverse("game:game-details", kwargs={"name": game_with_two_players.name})
@@ -135,6 +137,8 @@ class TestPlayGame:
         assert response.status_code == 200
         assert response.data["name"] == game_with_two_players.name
         assert len(response.data["players"]) == game_with_two_players.players.count()
+        assert "actual_mark" in response.data
+        assert response.data["actual_mark"] == GameConstants.MARK_X
 
     def test_get_game_details_raise_game_not_found(self, client):
         url = reverse("game:play-game", kwargs={"name": "false game"})
@@ -224,7 +228,9 @@ class TestPlayGame:
         assert response.status_code == 200
         assert response.data["name"] == game_with_two_players.name
         assert response.data["status"] == GameConstants.STATUS_IN_GAME
-        assert json.loads(response.data["board"])[0][0] == GameConstants.CHARACTERS_X
+        assert json.loads(response.data["board"])[0][0] == GameConstants.MARK_X
+        assert "actual_mark" in response.data
+        assert response.data["actual_mark"] == GameConstants.MARK_O
 
     def test_play_game_and_wins_horizontal(
         self, client, game_with_two_players_and_last_turn_to_win_horizontal

@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterField(
             model_name="usergame",
-            name="character",
+            name="mark",
             field=models.CharField(choices=[("X", "X"), ("O", "O")], max_length=1),
         ),
         migrations.AlterUniqueTogether(

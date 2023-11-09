@@ -54,7 +54,7 @@ class UserDetail:
                                 {"username": "Jerry"},
                             ],
                             "actual_player": None,
-                            "board": f"[[{GameConstants.CHARACTERS_X},{GameConstants.CHARACTERS_X},{GameConstants.CHARACTERS_X}],[Y,Y,''],['','','']]",
+                            "board": f"[[{GameConstants.MARK_X},{GameConstants.MARK_X},{GameConstants.MARK_X}],[Y,Y,''],['','','']]",
                             "winner": {
                                 "username": "Tom",
                             },
@@ -86,7 +86,7 @@ class GameList:
                         "actual_player": {
                             "username": "Tom",
                         },
-                        "board": f"[[{GameConstants.CHARACTERS_X},{GameConstants.CHARACTERS_X},''],[Y,Y,''],['','','']]",
+                        "board": f"[[{GameConstants.MARK_X},{GameConstants.MARK_X},''],[Y,Y,''],['','','']]",
                         "winner": {
                             "username": "Tom",
                         },
@@ -168,7 +168,11 @@ class GameDetail:
                         "actual_player": {
                             "username": "Tom",
                         },
-                        "board": f"[[{GameConstants.CHARACTERS_X},{GameConstants.CHARACTERS_X},''],[Y,Y,''],['','','']]",
+                        "marks": [
+                            {"username": "Tom", "mark": "X"},
+                            {"username": "Jerry", "mark": "Y"},
+                        ],
+                        "board": f"[[{GameConstants.MARK_X},{GameConstants.MARK_X},''],[Y,Y,''],['','','']]",
                         "winner": {
                             "username": "Tom",
                         },
@@ -243,7 +247,7 @@ class PlayGameDetail:
                         "actual_player": {
                             "username": "Tom",
                         },
-                        "board": f"[[{GameConstants.CHARACTERS_X},{GameConstants.CHARACTERS_X},''],[Y,Y,''],['','','']]",
+                        "board": f"[[{GameConstants.MARK_X},{GameConstants.MARK_X},''],[Y,Y,''],['','','']]",
                         "winner": {
                             "username": "Tom",
                         },
@@ -285,7 +289,7 @@ class PlayGameDetail:
                         "actual_player": {
                             "username": "Tom",
                         },
-                        "board": f"[[{GameConstants.CHARACTERS_X},{GameConstants.CHARACTERS_X},''],[Y,Y,''],['','','']]",
+                        "board": f"[[{GameConstants.MARK_X},{GameConstants.MARK_X},''],[Y,Y,''],['','','']]",
                         "winner": {
                             "username": "Tom",
                         },

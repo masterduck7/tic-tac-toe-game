@@ -71,10 +71,8 @@ class Game(models.Model):
             and movement_y in GameConstants.VALID_POSITIONS
             and decoded_board[movement_x][movement_y] == ""
         ):
-            character = UserGame.objects.get(
-                user=self.actual_player, game=self
-            ).character
-            decoded_board[movement_x][movement_y] = character
+            mark = UserGame.objects.get(user=self.actual_player, game=self).mark
+            decoded_board[movement_x][movement_y] = mark
             self.board = json.dumps(decoded_board)
             self.save()
         else:
@@ -90,15 +88,13 @@ class Game(models.Model):
     @property
     def check_winner(self) -> Optional[bool]:
         decoded_board = json.loads(self.board)
-        actual_character = UserGame.objects.get(
-            user=self.actual_player, game=self
-        ).character
+        actual_mark = UserGame.objects.get(user=self.actual_player, game=self).mark
 
         # Check horizontal
         for row in range(len(decoded_board)):
             winner = True
             for col in range(len(decoded_board)):
-                if decoded_board[row][col] != actual_character:
+                if decoded_board[row][col] != actual_mark:
                     winner = False
                     break
             if winner:
@@ -111,7 +107,7 @@ class Game(models.Model):
         for row in range(len(decoded_board)):
             winner = True
             for col in range(len(decoded_board)):
-                if decoded_board[col][row] != actual_character:
+                if decoded_board[col][row] != actual_mark:
                     winner = False
                     break
             if winner:
@@ -123,7 +119,7 @@ class Game(models.Model):
         # Check diagonals
         winner = True
         for row in range(len(decoded_board)):
-            if decoded_board[row][row] != actual_character:
+            if decoded_board[row][row] != actual_mark:
                 winner = False
                 break
         if winner:
@@ -134,7 +130,7 @@ class Game(models.Model):
 
         winner = True
         for row in range(len(decoded_board)):
-            if decoded_board[row][len(decoded_board) - 1 - row] != actual_character:
+            if decoded_board[row][len(decoded_board) - 1 - row] != actual_mark:
                 winner = False
                 break
         if winner:
@@ -154,11 +150,11 @@ class Game(models.Model):
 class UserGame(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
-    character = models.CharField(
+    mark = models.CharField(
         max_length=1,
         blank=False,
         null=False,
-        choices=GameConstants.CHARACTERS_CHOICES,
+        choices=GameConstants.MARK_CHOICES,
     )
 
     class Meta:

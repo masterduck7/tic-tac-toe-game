@@ -36,11 +36,12 @@ def game_with_one_player(user):
         name="Medium",
         status=GameConstants.STATUS_WAITING,
     )
+    game.actual_player = user
     game.players.add(user)
     game.save()
 
     user_game = UserGame.objects.get(user=user, game=game)
-    user_game.character = GameConstants.CHARACTERS_X
+    user_game.mark = GameConstants.MARK_X
     user_game.save()
 
     return game
@@ -59,10 +60,10 @@ def game_with_two_players(user, user_master):
     game.save()
 
     user_game = UserGame.objects.get(user=user, game=game)
-    user_game.character = GameConstants.CHARACTERS_X
+    user_game.mark = GameConstants.MARK_X
     user_game.save()
     user_master_game = UserGame.objects.get(user=user_master, game=game)
-    user_master_game.character = GameConstants.CHARACTERS_O
+    user_master_game.mark = GameConstants.MARK_O
     user_master_game.save()
 
     return game
@@ -80,18 +81,18 @@ def game_with_two_players_and_last_turn_to_win_horizontal(user, user_master):
     game.actual_player = user_master
     game.board = json.dumps(
         [
-            [GameConstants.CHARACTERS_O, GameConstants.CHARACTERS_O, ""],
+            [GameConstants.MARK_O, GameConstants.MARK_O, ""],
             ["", "", ""],
-            [GameConstants.CHARACTERS_X, GameConstants.CHARACTERS_X, ""],
+            [GameConstants.MARK_X, GameConstants.MARK_X, ""],
         ]
     )
     game.save()
 
     user_game = UserGame.objects.get(user=user, game=game)
-    user_game.character = GameConstants.CHARACTERS_X
+    user_game.mark = GameConstants.MARK_X
     user_game.save()
     user_master_game = UserGame.objects.get(user=user_master, game=game)
-    user_master_game.character = GameConstants.CHARACTERS_O
+    user_master_game.mark = GameConstants.MARK_O
     user_master_game.save()
 
     return game
@@ -109,18 +110,18 @@ def game_with_two_players_and_last_turn_to_win_vertical(user, user_master):
     game.actual_player = user_master
     game.board = json.dumps(
         [
-            [GameConstants.CHARACTERS_O, "", ""],
-            [GameConstants.CHARACTERS_O, "", ""],
-            ["", GameConstants.CHARACTERS_X, GameConstants.CHARACTERS_X],
+            [GameConstants.MARK_O, "", ""],
+            [GameConstants.MARK_O, "", ""],
+            ["", GameConstants.MARK_X, GameConstants.MARK_X],
         ]
     )
     game.save()
 
     user_game = UserGame.objects.get(user=user, game=game)
-    user_game.character = GameConstants.CHARACTERS_X
+    user_game.mark = GameConstants.MARK_X
     user_game.save()
     user_master_game = UserGame.objects.get(user=user_master, game=game)
-    user_master_game.character = GameConstants.CHARACTERS_O
+    user_master_game.mark = GameConstants.MARK_O
     user_master_game.save()
 
     return game
@@ -139,21 +140,21 @@ def game_with_two_players_and_last_turn_to_win_diagonal_1(user, user_master):
     game.board = json.dumps(
         [
             [
-                GameConstants.CHARACTERS_O,
-                GameConstants.CHARACTERS_X,
-                GameConstants.CHARACTERS_X,
+                GameConstants.MARK_O,
+                GameConstants.MARK_X,
+                GameConstants.MARK_X,
             ],
-            ["", GameConstants.CHARACTERS_O, ""],
+            ["", GameConstants.MARK_O, ""],
             ["", "", ""],
         ]
     )
     game.save()
 
     user_game = UserGame.objects.get(user=user, game=game)
-    user_game.character = GameConstants.CHARACTERS_X
+    user_game.mark = GameConstants.MARK_X
     user_game.save()
     user_master_game = UserGame.objects.get(user=user_master, game=game)
-    user_master_game.character = GameConstants.CHARACTERS_O
+    user_master_game.mark = GameConstants.MARK_O
     user_master_game.save()
 
     return game
@@ -172,21 +173,21 @@ def game_with_two_players_and_last_turn_to_win_diagonal_2(user, user_master):
     game.board = json.dumps(
         [
             [
-                GameConstants.CHARACTERS_X,
-                GameConstants.CHARACTERS_X,
-                GameConstants.CHARACTERS_O,
+                GameConstants.MARK_X,
+                GameConstants.MARK_X,
+                GameConstants.MARK_O,
             ],
-            ["", GameConstants.CHARACTERS_O, ""],
+            ["", GameConstants.MARK_O, ""],
             ["", "", ""],
         ]
     )
     game.save()
 
     user_game = UserGame.objects.get(user=user, game=game)
-    user_game.character = GameConstants.CHARACTERS_X
+    user_game.mark = GameConstants.MARK_X
     user_game.save()
     user_master_game = UserGame.objects.get(user=user_master, game=game)
-    user_master_game.character = GameConstants.CHARACTERS_O
+    user_master_game.mark = GameConstants.MARK_O
     user_master_game.save()
 
     return game
