@@ -33,6 +33,5 @@ class GameSerializer(InitGameSerializer):
     winner = UserInputSerializer(read_only=True)
 
 
-class GameFinishedSerializer(serializers.Serializer):
-    name = serializers.CharField(max_length=100, read_only=True)
+class GameFinishedSerializer(AvailableGameSerializer):
     winner = UserInputSerializer(read_only=True)

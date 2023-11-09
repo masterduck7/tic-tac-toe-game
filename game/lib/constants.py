@@ -8,3 +8,5 @@ class GameConstants:
         (STATUS_IN_GAME, "In Game"),
         (STATUS_FINISHED, "Finished"),
     )
+
+    VALID_POSITIONS = [0, 1, 2]

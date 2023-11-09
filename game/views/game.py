@@ -113,3 +113,5 @@ class PlayGameDetail(APIView):
             else:
                 serializer = game_serializers.GameSerializer(game)
                 return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            raise game_exceptions.SerializerException

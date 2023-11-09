@@ -65,7 +65,11 @@ class Game(models.Model):
 
     def check_movement(self, movement_x: int, movement_y: int) -> Optional[bool]:
         decoded_board = json.loads(self.board)
-        if decoded_board[movement_x][movement_y] == 0:
+        if (
+            movement_x in GameConstants.VALID_POSITIONS
+            and movement_y in GameConstants.VALID_POSITIONS
+            and decoded_board[movement_x][movement_y] == 0
+        ):
             decoded_board[movement_x][movement_y] = self.actual_player.username
             self.board = json.dumps(decoded_board)
             self.save()
