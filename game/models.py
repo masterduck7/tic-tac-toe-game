@@ -3,6 +3,7 @@ from typing import Optional
 from django.db import models
 
 from game.lib.constants import GameConstants
+from game.lib import exceptions as game_exceptions
 
 
 class User(models.Model):
@@ -56,20 +57,24 @@ class Game(models.Model):
     @property
     def check_status(self) -> Optional[bool]:
         if self.status != GameConstants.STATUS_IN_GAME:
-            raise Exception
+            raise game_exceptions.NotValidGameStatusException
 
     def check_actual_player(self, username: str) -> Optional[bool]:
         if self.actual_player.username != username:
-            raise Exception
+            raise game_exceptions.NotUserTurnException
 
     def check_movement(self, movement_x: int, movement_y: int) -> Optional[bool]:
         decoded_board = json.loads(self.board)
-        if decoded_board[movement_x][movement_y] == 0:
+        if (
+            movement_x in GameConstants.VALID_POSITIONS
+            and movement_y in GameConstants.VALID_POSITIONS
+            and decoded_board[movement_x][movement_y] == 0
+        ):
             decoded_board[movement_x][movement_y] = self.actual_player.username
             self.board = json.dumps(decoded_board)
             self.save()
         else:
-            raise Exception
+            raise game_exceptions.NotValidPositionException
 
     @property
     def change_player(self):
