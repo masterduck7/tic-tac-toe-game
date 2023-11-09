@@ -105,6 +105,9 @@ class PlayGameDetail(APIView):
         except Game.DoesNotExist:
             raise game_exceptions.GameNotFoundException
 
+    @swagger_auto_schema(
+        responses=game_swagger.PlayGameDetail.get_response_schemas,
+    )
     def get(self, request, name, format=None):
         """
         Get the actual game details.
@@ -113,6 +116,10 @@ class PlayGameDetail(APIView):
         serializer = game_serializers.GameSerializer(game)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    @swagger_auto_schema(
+        responses=game_swagger.PlayGameDetail.post_response_schemas,
+        request_body=game_swagger.PlayGameDetail.post_request_schemas,
+    )
     def post(self, request, name, format=None):
         """
         Play the game making a movement.

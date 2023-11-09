@@ -226,3 +226,95 @@ class GameDetail:
             },
         ),
     }
+
+
+class PlayGameDetail:
+    get_response_schemas = {
+        "200": openapi.Response(
+            description="Game details",
+            examples={
+                "application/json": [
+                    {
+                        "name": "Lets play",
+                        "status": GameConstants.STATUS_IN_GAME,
+                        "players": [
+                            {"username": "Tom"},
+                            {"username": "Jerry"},
+                        ],
+                        "actual_player": {
+                            "username": "Tom",
+                        },
+                        "board": "[[Tom,Tom,0],[Jerry,Jerry,0],[0,0,0]]",
+                        "winner": {
+                            "username": "Tom",
+                        },
+                    }
+                ]
+            },
+        ),
+        "404": openapi.Response(
+            description="Game not found",
+            examples={"application/json": {"detail": "Game Not Found."}},
+        ),
+    }
+
+    post_request_schemas = openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            "name": openapi.Schema(type=openapi.TYPE_STRING, description="string"),
+            "username": openapi.Schema(type=openapi.TYPE_STRING, description="string"),
+            "movement_x": openapi.Schema(
+                type=openapi.TYPE_STRING, description="string"
+            ),
+            "movement_y": openapi.Schema(
+                type=openapi.TYPE_STRING, description="string"
+            ),
+        },
+    )
+
+    post_response_schemas = {
+        "200": openapi.Response(
+            description="Game details",
+            examples={
+                "application/json": [
+                    {
+                        "name": "Lets play",
+                        "status": GameConstants.STATUS_IN_GAME,
+                        "players": [
+                            {"username": "Tom"},
+                            {"username": "Jerry"},
+                        ],
+                        "actual_player": {
+                            "username": "Tom",
+                        },
+                        "board": "[[Tom,Tom,0],[Jerry,Jerry,0],[0,0,0]]",
+                        "winner": {
+                            "username": "Tom",
+                        },
+                    }
+                ]
+            },
+        ),
+        "200 ": openapi.Response(
+            description="Game finished",
+            examples={
+                "application/json": [
+                    {
+                        "name": "Lets play",
+                        "status": GameConstants.STATUS_FINISHED,
+                        "winner": {
+                            "username": "Tom",
+                        },
+                    }
+                ]
+            },
+        ),
+        "400": openapi.Response(
+            description="Serializer error",
+            examples={
+                "application/json": {
+                    "detail": game_exceptions.SerializerException.default_detail
+                }
+            },
+        ),
+    }
