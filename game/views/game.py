@@ -1,19 +1,24 @@
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from game.lib.constants import GameConstants
 from game.lib import exceptions as game_exceptions
+from game.lib import swagger as game_swagger
 from game.models import Game, User
 from game.serializers import game as game_serializers
 
 
 class GamesList(APIView):
-    """
-    List all games and optional filter by available games
-    """
-
+    @swagger_auto_schema(
+        responses=game_swagger.GameList.get_response_schemas,
+        manual_parameters=[game_swagger.GameList.get_query_param],
+    )
     def get(self, request, format=None):
+        """
+        List all games and optional filter by available games
+        """
         if request.GET.get("status") == "waiting":
             games = Game.objects.filter(status=GameConstants.STATUS_WAITING)
             serializer = game_serializers.AvailableGameSerializer(games, many=True)
@@ -22,7 +27,14 @@ class GamesList(APIView):
             serializer = game_serializers.GameSerializer(games, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    @swagger_auto_schema(
+        responses=game_swagger.GameList.post_response_schemas,
+        request_body=game_swagger.GameList.post_request_schemas,
+    )
     def post(self, request, format=None):
+        """
+        Create a game. User is created also, if the user sent it does not exist.
+        """
         serializer = game_serializers.GameInputSerializer(data=request.data)
         if serializer.is_valid():
             game = Game.objects.create(
@@ -41,22 +53,31 @@ class GamesList(APIView):
 
 
 class GameDetail(APIView):
-    """
-    Retrieve a game instance and update users
-    """
-
     def get_object(self, name):
         try:
             return Game.objects.get(name=name)
         except Game.DoesNotExist:
             raise game_exceptions.GameNotFoundException
 
+    @swagger_auto_schema(
+        responses=game_swagger.GameDetail.get_response_schemas,
+    )
     def get(self, request, name, format=None):
+        """
+        Retrieve a game instance
+        """
         game = self.get_object(name)
         serializer = game_serializers.GameSerializer(game)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def post(self, request, name, format=None):
+    @swagger_auto_schema(
+        responses=game_swagger.GameDetail.post_response_schemas,
+        request_body=game_swagger.GameDetail.post_request_schemas,
+    )
+    def put(self, request, name, format=None):
+        """
+        Add a new user to the game. If the game is filled it starts.
+        """
         serializer = game_serializers.GameInputSerializer(data=request.data)
         if serializer.is_valid():
             game = self.get_object(name)
@@ -78,10 +99,6 @@ class GameDetail(APIView):
 
 
 class PlayGameDetail(APIView):
-    """
-    Play the game
-    """
-
     def get_object(self, name):
         try:
             return Game.objects.get(name=name)
@@ -89,11 +106,17 @@ class PlayGameDetail(APIView):
             raise game_exceptions.GameNotFoundException
 
     def get(self, request, name, format=None):
+        """
+        Get the actual game details.
+        """
         game = self.get_object(name)
         serializer = game_serializers.GameSerializer(game)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, name, format=None):
+        """
+        Play the game making a movement.
+        """
         serializer = game_serializers.UserPlayGameInputSerializer(data=request.data)
         if serializer.is_valid():
             game = self.get_object(name)
