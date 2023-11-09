@@ -23,7 +23,7 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 (
-                    "character",
+                    "mark",
                     models.CharField(
                         choices=[("X", "X"), ("O", "O")], default="X", max_length=1
                     ),
