@@ -75,8 +75,8 @@ class GameDetail(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
-        responses=game_swagger.GameDetail.post_response_schemas,
-        request_body=game_swagger.GameDetail.post_request_schemas,
+        responses=game_swagger.GameDetail.put_response_schemas,
+        request_body=game_swagger.GameDetail.put_request_schemas,
     )
     def put(self, request, name, format=None):
         """

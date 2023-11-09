@@ -54,7 +54,7 @@ class UserDetail:
                                 {"username": "Jerry"},
                             ],
                             "actual_player": None,
-                            "board": "[[Tom,Tom,Tom],[Jerry,Jerry,''],['','','']]",
+                            "board": f"[[{GameConstants.CHARACTERS_X},{GameConstants.CHARACTERS_X},{GameConstants.CHARACTERS_X}],[Y,Y,''],['','','']]",
                             "winner": {
                                 "username": "Tom",
                             },
@@ -86,7 +86,7 @@ class GameList:
                         "actual_player": {
                             "username": "Tom",
                         },
-                        "board": "[[Tom,Tom,''],[Jerry,Jerry,''],['','','']]",
+                        "board": f"[[{GameConstants.CHARACTERS_X},{GameConstants.CHARACTERS_X},''],[Y,Y,''],['','','']]",
                         "winner": {
                             "username": "Tom",
                         },
@@ -168,7 +168,7 @@ class GameDetail:
                         "actual_player": {
                             "username": "Tom",
                         },
-                        "board": "[[Tom,Tom,''],[Jerry,Jerry,''],['','','']]",
+                        "board": f"[[{GameConstants.CHARACTERS_X},{GameConstants.CHARACTERS_X},''],[Y,Y,''],['','','']]",
                         "winner": {
                             "username": "Tom",
                         },
@@ -182,14 +182,14 @@ class GameDetail:
         ),
     }
 
-    post_request_schemas = openapi.Schema(
+    put_request_schemas = openapi.Schema(
         type=openapi.TYPE_OBJECT,
         properties={
             "username": openapi.Schema(type=openapi.TYPE_STRING, description="string"),
         },
     )
 
-    post_response_schemas = {
+    put_response_schemas = {
         "200": openapi.Response(
             description="Game updated",
             examples={
@@ -243,7 +243,7 @@ class PlayGameDetail:
                         "actual_player": {
                             "username": "Tom",
                         },
-                        "board": "[[Tom,Tom,''],[Jerry,Jerry,''],['','','']]",
+                        "board": f"[[{GameConstants.CHARACTERS_X},{GameConstants.CHARACTERS_X},''],[Y,Y,''],['','','']]",
                         "winner": {
                             "username": "Tom",
                         },
@@ -285,7 +285,7 @@ class PlayGameDetail:
                         "actual_player": {
                             "username": "Tom",
                         },
-                        "board": "[[Tom,Tom,''],[Jerry,Jerry,''],['','','']]",
+                        "board": f"[[{GameConstants.CHARACTERS_X},{GameConstants.CHARACTERS_X},''],[Y,Y,''],['','','']]",
                         "winner": {
                             "username": "Tom",
                         },
