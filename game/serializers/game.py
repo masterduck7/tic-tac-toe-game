@@ -21,7 +21,7 @@ class AvailableGameSerializer(serializers.Serializer):
 
 
 class GameCreatedSerializer(AvailableGameSerializer):
-    users = UserInputSerializer(many=True, read_only=True)
+    players = UserInputSerializer(many=True, read_only=True)
 
 
 class InitGameSerializer(GameCreatedSerializer):

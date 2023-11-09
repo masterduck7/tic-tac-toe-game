@@ -38,7 +38,7 @@ class UserDetail(APIView):
 
     def get(self, request, username, format=None):
         user = self.get_object(username)
-        games = Game.objects.filter(users__id=user.id)
+        games = Game.objects.filter(players__id=user.id)
         serializer_user = UserSerializer(user)
         serializer_games = GameSerializer(games, many=True)
         data = {

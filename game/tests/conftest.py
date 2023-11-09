@@ -46,7 +46,7 @@ def game_with_one_player(user):
         name="Medium",
         status=GameConstants.STATUS_WAITING,
     )
-    game.users.add(user)
+    game.players.add(user)
     game.save()
     return game
 
@@ -58,8 +58,8 @@ def game_with_two_players(user, user_master):
         name="Play",
         status=GameConstants.STATUS_IN_GAME,
     )
-    game.users.add(user)
-    game.users.add(user_master)
+    game.players.add(user)
+    game.players.add(user_master)
     game.actual_player = user
     game.save()
     return game
@@ -72,8 +72,8 @@ def game_with_two_players_and_last_turn_to_win_horizontal(user, user_master):
         name="Play",
         status=GameConstants.STATUS_IN_GAME,
     )
-    game.users.add(user)
-    game.users.add(user_master)
+    game.players.add(user)
+    game.players.add(user_master)
     game.actual_player = user_master
     game.board = json.dumps(
         [
@@ -93,8 +93,8 @@ def game_with_two_players_and_last_turn_to_win_vertical(user, user_master):
         name="Play",
         status=GameConstants.STATUS_IN_GAME,
     )
-    game.users.add(user)
-    game.users.add(user_master)
+    game.players.add(user)
+    game.players.add(user_master)
     game.actual_player = user_master
     game.board = json.dumps(
         [
@@ -114,8 +114,8 @@ def game_with_two_players_and_last_turn_to_win_diagonal_1(user, user_master):
         name="Play",
         status=GameConstants.STATUS_IN_GAME,
     )
-    game.users.add(user)
-    game.users.add(user_master)
+    game.players.add(user)
+    game.players.add(user_master)
     game.actual_player = user_master
     game.board = json.dumps(
         [
@@ -135,8 +135,8 @@ def game_with_two_players_and_last_turn_to_win_diagonal_2(user, user_master):
         name="Play",
         status=GameConstants.STATUS_IN_GAME,
     )
-    game.users.add(user)
-    game.users.add(user_master)
+    game.players.add(user)
+    game.players.add(user_master)
     game.actual_player = user_master
     game.board = json.dumps(
         [

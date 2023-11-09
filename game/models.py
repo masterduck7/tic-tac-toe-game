@@ -28,7 +28,7 @@ class Game(models.Model):
         default="[[0,0,0],[0,0,0],[0,0,0]]",
         blank=None,
     )
-    users = models.ManyToManyField(
+    players = models.ManyToManyField(
         User,
         related_name="users",
         related_query_name="game",
@@ -78,7 +78,7 @@ class Game(models.Model):
 
     @property
     def change_player(self):
-        self.actual_player = self.users.exclude(
+        self.actual_player = self.players.exclude(
             username=self.actual_player.username
         ).first()
         self.save()
@@ -139,7 +139,7 @@ class Game(models.Model):
             self.winner.points += 1
             self.actual_player = None
             self.save()
-            for user in self.users.all():
+            for user in self.players.all():
                 user.number_of_games += 1
                 user.save()
             return True
