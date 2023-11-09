@@ -93,7 +93,7 @@ class TestGameDetail:
             "name": game_with_one_player.name,
             "username": user_master.username,
         }
-        response = client.post(url, data)
+        response = client.put(url, data)
 
         assert response.status_code == 200
         assert response.data["name"] == game_with_one_player.name
@@ -106,7 +106,7 @@ class TestGameDetail:
             "name": game_with_two_players.name,
             "username": "I want to play",
         }
-        response = client.post(url, data)
+        response = client.put(url, data)
 
         assert response.status_code == 400
         assert (
@@ -117,7 +117,7 @@ class TestGameDetail:
     def test_update_game_raise_serializer_exception(self, client, game_with_one_player):
         url = reverse("game:game-details", kwargs={"name": game_with_one_player.name})
         data = {"name": game_with_one_player.name}
-        response = client.post(url, data)
+        response = client.put(url, data)
 
         assert response.status_code == 400
         assert (
