@@ -10,3 +10,10 @@ class GameConstants:
     )
 
     VALID_POSITIONS = [0, 1, 2]
+
+    CHARACTERS_X = "X"
+    CHARACTERS_O = "O"
+    CHARACTERS_CHOICES = (
+        (CHARACTERS_X, "X"),
+        (CHARACTERS_O, "O"),
+    )
