@@ -16,6 +16,11 @@ class NotValidGameStatusException(APIException):
     default_detail = "Game status is not valid for this action."
 
 
+class FullGameStatusException(APIException):
+    status_code = 400
+    default_detail = "The game is full. Please select other."
+
+
 class NotUserTurnException(APIException):
     status_code = 400
     default_detail = "The turn to play is for the other player. Please wait until this turn finishes."
@@ -26,3 +31,8 @@ class NotValidPositionException(APIException):
     default_detail = (
         "The position selected is not possible. Please select an empty space."
     )
+
+
+class SerializerException(APIException):
+    status_code = 400
+    default_detail = "Please complete all the required fields."

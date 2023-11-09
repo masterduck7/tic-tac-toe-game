@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from game.lib.constants import GameConstants
-from game.lib.exceptions import GameNotFoundException
+from game.lib import exceptions as game_exceptions
 from game.models import Game, User
 from game.serializers import game as game_serializers
 
@@ -36,6 +36,8 @@ class GamesList(APIView):
 
             serializer = game_serializers.GameCreatedSerializer(game)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            raise game_exceptions.SerializerException
 
 
 class GameDetail(APIView):
@@ -47,7 +49,7 @@ class GameDetail(APIView):
         try:
             return Game.objects.get(name=name)
         except Game.DoesNotExist:
-            raise GameNotFoundException
+            raise game_exceptions.GameNotFoundException
 
     def get(self, request, name, format=None):
         game = self.get_object(name)
@@ -58,6 +60,9 @@ class GameDetail(APIView):
         serializer = game_serializers.GameInputSerializer(data=request.data)
         if serializer.is_valid():
             game = self.get_object(name)
+            if game.users.count() >= 2:
+                raise game_exceptions.FullGameStatusException
+
             user = User.objects.get(username=serializer.data["username"])
             game.users.add(user)
 
@@ -71,8 +76,8 @@ class GameDetail(APIView):
 
             serializer = game_serializers.GameSerializer(game)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            raise game_exceptions.SerializerException
 
 
 class PlayGameDetail(APIView):
@@ -84,7 +89,7 @@ class PlayGameDetail(APIView):
         try:
             return Game.objects.get(name=name)
         except Game.DoesNotExist:
-            raise GameNotFoundException
+            raise game_exceptions.GameNotFoundException
 
     def get(self, request, name, format=None):
         game = self.get_object(name)
