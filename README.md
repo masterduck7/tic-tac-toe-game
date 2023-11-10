@@ -4,9 +4,14 @@ Tic tac toe game with Django, Rest API, Docker, CircleCI and Pytest
 
 ## Details
 
-- Version 1.0.0
-- The application is running in a Docker container and with a sqlite database
-- Documentation is running on `http://localhost:8000/swagger/`
+- Software
+  - Version 1.0.0
+  - The application is running in a Docker container and with a sqlite database
+  - Documentation is running on `http://localhost:8000/swagger/`
+- Game
+  - The user win a points after a win
+  - The user sum a new game played after the game finishes
+  - The inital user joined to the game have the `X` mark and the second one the `O`. For this version is not possible to modify.
 
 ## Instructions
 
@@ -31,6 +36,14 @@ Tic tac toe game with Django, Rest API, Docker, CircleCI and Pytest
   - `POST`: Register a new User
 - `users/<str:username>/`
   - `GET`: Login User and get user data with the games played
+
+## How to play
+
+- `users/`: Register the both users
+- `games/` POST: Create the game
+- `games/<str:name>` PUT: Join the second user to the game
+- `games/<str:name>/play` POST: Make the movements one player and the other until the game finishes and return the final data
+- `users/<str:username>/` GET: In the profile you can check your points, number of games, and list of games played
 
 ## Future improvements
 
