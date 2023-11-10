@@ -88,7 +88,9 @@ class GameDetail(APIView):
             if game.players.count() >= 2:
                 raise game_exceptions.FullGameStatusException
 
-            user = User.objects.get(username=serializer.data["username"])
+            user, _ = User.objects.get_or_create(
+                username=serializer.data["username"],
+            )
             game.players.add(user)
 
             if game.players.all().count() == 2:
@@ -102,11 +104,14 @@ class GameDetail(APIView):
 
                 serializer = game_serializers.InitGameSerializer(game)
 
-                actual_mark = {
-                    "actual_mark": UserGame.objects.get(
-                        user=game.actual_player, game=game
-                    ).mark
-                }
+                if game.status == GameConstants.STATUS_IN_GAME:
+                    actual_mark = {
+                        "actual_mark": UserGame.objects.get(
+                            user=game.actual_player, game=game
+                        ).mark
+                    }
+                else:
+                    actual_mark = {}
 
                 response = {**serializer.data, **actual_mark}
                 return Response(response, status=status.HTTP_200_OK)
@@ -131,11 +136,16 @@ class PlayGameDetail(APIView):
         game = self.get_object(name)
         serializer = game_serializers.GameSerializer(game)
 
-        actual_mark = {
-            "actual_mark": UserGame.objects.get(user=game.actual_player, game=game).mark
-        }
-        response = {**serializer.data, **actual_mark}
+        if game.status == GameConstants.STATUS_IN_GAME:
+            actual_mark = {
+                "actual_mark": UserGame.objects.get(
+                    user=game.actual_player, game=game
+                ).mark
+            }
+        else:
+            actual_mark = {}
 
+        response = {**serializer.data, **actual_mark}
         return Response(response, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
@@ -162,13 +172,16 @@ class PlayGameDetail(APIView):
             else:
                 serializer = game_serializers.GameSerializer(game)
 
-                actual_mark = {
-                    "actual_mark": UserGame.objects.get(
-                        user=game.actual_player, game=game
-                    ).mark
-                }
-                response = {**serializer.data, **actual_mark}
+                if game.status == GameConstants.STATUS_IN_GAME:
+                    actual_mark = {
+                        "actual_mark": UserGame.objects.get(
+                            user=game.actual_player, game=game
+                        ).mark
+                    }
+                else:
+                    actual_mark = {}
 
+                response = {**serializer.data, **actual_mark}
                 return Response(response, status=status.HTTP_200_OK)
         else:
             raise game_exceptions.SerializerException

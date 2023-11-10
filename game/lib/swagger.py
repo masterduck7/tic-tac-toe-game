@@ -168,10 +168,6 @@ class GameDetail:
                         "actual_player": {
                             "username": "Tom",
                         },
-                        "marks": [
-                            {"username": "Tom", "mark": "X"},
-                            {"username": "Jerry", "mark": "Y"},
-                        ],
                         "board": f"[[{GameConstants.MARK_X},{GameConstants.MARK_X},''],[Y,Y,''],['','','']]",
                         "winner": {
                             "username": "Tom",
@@ -208,6 +204,7 @@ class GameDetail:
                         "actual_player": {
                             "username": "Tom",
                         },
+                        "actual_mark": "X",
                     }
                 ]
             },
@@ -251,6 +248,7 @@ class PlayGameDetail:
                         "winner": {
                             "username": "Tom",
                         },
+                        "actual_mark": "X",
                     }
                 ]
             },
@@ -293,6 +291,7 @@ class PlayGameDetail:
                         "winner": {
                             "username": "Tom",
                         },
+                        "actual_mark": "X",
                     }
                 ]
             },
